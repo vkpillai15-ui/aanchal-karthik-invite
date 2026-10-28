@@ -1,0 +1,8 @@
+{
+  "name": "karthik-aanchal-invite",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "10.7.13"
+  }
+}

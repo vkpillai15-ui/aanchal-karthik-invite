@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Our Invite · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
+<style>
+:root{--ground:#FBF6EC;--raised:#F3E8D6;--ink:#2B1611;--muted:#6B5244;--maroon:#6E1520;--gold:#C6A15B;--gold-text:#7E5E26;--ok:#3F5F33;
+  --display:"Bodoni Moda",Georgia,serif;--caps:"Cinzel",Georgia,serif;--body:"Cormorant Garamond",Georgia,serif;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:500 17px/1.5 var(--body);padding:max(20px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left))}
+main{max-width:720px;margin:0 auto;display:grid;gap:28px}
+h1{margin:0;font:italic 400 34px/1.1 var(--display);color:var(--maroon)}
+h2{margin:0 0 10px;font:600 11px/1 var(--caps);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-text)}
+.panel{background:#fff;border:1px solid rgba(198,161,91,.55);border-radius:6px;padding:18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:var(--raised);border-radius:4px;padding:14px}
+.stat b{display:block;font:400 34px/1 var(--display);color:var(--maroon);font-variant-numeric:lining-nums tabular-nums}
+.stat span{font:500 10px/1.4 var(--caps);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-text)}
+table{width:100%;border-collapse:collapse;font-size:16px}
+td,th{padding:7px 4px;border-bottom:1px solid rgba(198,161,91,.3);text-align:left;vertical-align:middle}
+th{font:600 10px/1 var(--caps);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-text)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:6px;background:var(--raised);border-radius:3px;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--gold)}
+.wish{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid rgba(198,161,91,.3)}
+.wish p{margin:0}.wish .who{font:500 10px/1.6 var(--caps);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-text)}
+.wish.hidden p{opacity:.45;text-decoration:line-through}
+button,.btn{font:600 11px/1 var(--caps);letter-spacing:.18em;text-transform:uppercase;padding:11px 14px;border-radius:2px;border:1px solid var(--maroon);background:#fff;color:var(--maroon);cursor:pointer}
+button.primary{background:var(--maroon);color:#FBF6EC}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+label{display:block;font:600 10px/1 var(--caps);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-text);margin-bottom:6px}
+input,textarea{width:100%;font:500 17px/1.4 var(--body);padding:10px 12px;border:1px solid rgba(126,94,38,.4);border-radius:2px;background:var(--ground);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.row > div{flex:1;min-width:200px}
+.out{margin-top:12px;display:grid;gap:8px}
+.out code{display:block;padding:10px;background:var(--raised);border-radius:2px;font:15px/1.4 ui-monospace,Menlo,monospace;word-break:break-all}
+.muted{color:var(--muted);font-size:15px}
+.err{color:#8A2A1A}
+[hidden]{display:none!important}
+#dash{display:grid;gap:28px}
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Aanchal &amp; Karthik · Dashboard</h1><p class="muted">Private. Live numbers from your invite.</p></header>
+
+  <section class="panel" id="login">
+    <h2>Unlock</h2>
+    <div class="row"><div><label for="key">Dashboard key</label><input id="key" type="password" autocomplete="current-password"></div><button class="primary" id="go">Open</button></div>
+    <p class="muted err" id="loginMsg"></p>
+  </section>
+
+  <div id="dash" hidden>
+    <section class="panel"><h2>At a glance</h2><div class="stats" id="stats"></div></section>
+    <section class="panel"><h2>Quiz · how many got each right</h2><table id="quiz"></table></section>
+    <section class="panel"><h2>Wishes</h2><p class="muted">Hide anything you don’t want floating on the invite. Hidden wishes stay here.</p><div id="wishes"></div></section>
+  </div>
+
+  <section class="panel">
+    <h2>Personal guest link</h2>
+    <div class="row"><div><label for="gname">Family or guest name</label><input id="gname" placeholder="Sharma Family"></div><button class="primary" id="make">Make link</button></div>
+    <div class="out" id="out" hidden>
+      <code id="link"></code>
+      <div class="row"><button id="copyLink">Copy link</button><button id="copyMsg">Copy WhatsApp message</button></div>
+      <code id="msg" style="white-space:pre-wrap"></code>
+    </div>
+  </section>
+</main>
+<script>
+const QUIZ = ["Who fell first?","Who apologises first after a fight?","Who plans the trips?","Who’s more likely to cry at the wedding?","Who is more likely to be late?","Who controls the TV remote?","Who cooks better?","Who is the bigger foodie?","Who suggests good movies?","Who proposed first?","Who is always right? (Shagun)"];
+const $ = s => document.querySelector(s);
+const nf = n => Number(n || 0).toLocaleString("en-IN");
+let KEY = ""; try{ KEY = localStorage.getItem("ka_admin") || ""; }catch(_){}
+$("#key").value = KEY;
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+async function load(){
+  const r = await fetch("/api/admin?key=" + encodeURIComponent(KEY)).catch(() => null);
+  if(!r || !r.ok){ $("#loginMsg").textContent = r && r.status === 401 ? "That key didn’t work." : "Couldn’t reach the server."; return; }
+  try{ localStorage.setItem("ka_admin", KEY); }catch(_){}
+  const d = await r.json(); $("#login").hidden = true; $("#dash").hidden = false;
+  const q = d.quiz || { plays:0, correct:[], scores:[] }, shown = d.wishes.filter(w => !w.hidden).length;
+  const avg = q.plays ? (q.scores.reduce((a, c, i) => a + c * i, 0) / q.plays).toFixed(1) : "–";
+  $("#stats").innerHTML = [[nf(d.bless.count),"Blessings showered"],[nf(d.bless.guests),"Guests who blessed"],[nf(q.plays),"Quiz plays"],[avg,"Average score / 11"],[nf(shown),"Wishes floating"]]
+    .map(([v,l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
+  $("#quiz").innerHTML = `<tr><th>Question</th><th></th><th class="n">Right</th></tr>` + QUIZ.map((t, i) => { const p = q.plays ? Math.round((q.correct[i] || 0) / q.plays * 100) : 0;
+    return `<tr><td>${esc(t)}</td><td style="width:30%"><div class="bar"><i style="width:${p}%"></i></div></td><td class="n">${q.plays ? p + "%" : "–"}</td></tr>`; }).join("");
+  $("#wishes").innerHTML = d.wishes.length ? d.wishes.slice().reverse().map(w => `<div class="wish ${w.hidden ? "hidden" : ""}"><div><p>${esc(w.wish)}</p><p class="who">${esc(w.name)} · ${new Date(w.at).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"})}</p></div><button data-id="${esc(w.id)}" data-h="${w.hidden ? 0 : 1}">${w.hidden ? "Show" : "Hide"}</button></div>`).join("") : `<p class="muted">No wishes yet.</p>`;
+}
+$("#wishes").addEventListener("click", async e => { const b = e.target.closest("button[data-id]"); if(!b) return; b.disabled = true;
+  await fetch("/api/admin/hide?key=" + encodeURIComponent(KEY), { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify({ id:b.dataset.id, hidden:b.dataset.h === "1" }) }).catch(() => {}); load(); });
+$("#go").addEventListener("click", () => { KEY = $("#key").value.trim(); load(); });
+$("#key").addEventListener("keydown", e => { if(e.key === "Enter"){ KEY = $("#key").value.trim(); load(); } });
+if(KEY) load();
+// personal links
+$("#make").addEventListener("click", () => {
+  const name = $("#gname").value.trim().replace(/\s+/g, " "); if(!name) return;
+  const link = `${location.origin}/?to=${encodeURIComponent(name.replace(/ /g, "-"))}`;
+  const msg = `Dear ${name},\n\nWith joy in our hearts, we invite you to celebrate our wedding — 19 & 20 November 2026, The Opulence, New Delhi.\n\nOpen your invitation: ${link}\n\nWith love,\nAanchal & Karthik`;
+  $("#link").textContent = link; $("#msg").textContent = msg; $("#out").hidden = false;
+});
+const copy = async (t, b) => { try{ await navigator.clipboard.writeText(t); const o = b.textContent; b.textContent = "Copied"; setTimeout(() => b.textContent = o, 1400); }catch(_){ } };
+$("#copyLink").addEventListener("click", e => copy($("#link").textContent, e.currentTarget));
+$("#copyMsg").addEventListener("click", e => copy($("#msg").textContent, e.currentTarget));
+</script>
+</body>
+</html>
