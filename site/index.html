@@ -21,7 +21,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&family=Tiro+Devanagari+Sanskrit&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&family=Tiro+Devanagari+Sanskrit&display=swap">
 <style>
 /* Layout: a phone-width column holds a fixed "stage" of scene videos (cover-cropped 9:16 box);
    full-height sections snap-scroll over it carrying copy in the open sky and controls on the floor.
@@ -85,7 +85,7 @@ main{position:relative;z-index:3}
 .in .r{opacity:1;transform:none}
 
 .eyebrow{font-family:var(--f-caps);font-weight:500;font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--n-gold)}
-.title{margin:0;font-family:var(--f-display);font-style:italic;font-weight:400;font-size:min(56px,14.5cqw);line-height:1.02;letter-spacing:-.01em}
+.title{margin:0;font-family:var(--f-display);font-style:italic;font-weight:500;font-size:min(56px,14.5cqw);line-height:1.02;letter-spacing:-.01em}
 .sched{margin:0;font-family:var(--f-display);font-style:italic;font-size:19px;line-height:1.4;color:#FFF7E8}
 .sched b{font-family:var(--f-caps);font-style:normal;font-weight:600;font-size:11.5px;letter-spacing:.2em;color:var(--n-gold);margin-left:8px}
 .place{margin:0;font-family:var(--f-body);font-weight:500;font-size:18px;line-height:1.45;color:var(--n-muted)}
@@ -178,6 +178,9 @@ main{position:relative;z-index:3}
 .rail.peek button.on .lbl,.rail button:hover .lbl,.rail button:focus-visible .lbl{opacity:1;visibility:visible;transform:none}
 .rail button:focus-visible i{outline:2px solid var(--gold-light);outline-offset:4px}
 
+/* Bodoni at a small optical size: thicker hairlines, readable crossbars */
+html{font-variation-settings:"opsz" 11}
+
 /* ---------- formal invitation ---------- */
 .card-arch{position:absolute;left:2.6cqw;right:2.6cqw;top:50%;transform:translateY(-50%);display:grid;justify-items:center;gap:7px;text-align:center;color:var(--ink);
   padding:44px 4cqw 28px;background:var(--ground);border-radius:var(--radius-arch) var(--radius-arch) var(--radius-card) var(--radius-card);box-shadow:var(--shadow-soft)}
@@ -186,7 +189,7 @@ main{position:relative;z-index:3}
 .card-arch .mono{width:58px;height:auto;margin-bottom:2px}
 .card-arch .deva{color:var(--gold-text);font-size:15px}
 .card-arch .ln{font-family:var(--f-body);font-weight:500;font-size:min(16px,4.2cqw);line-height:1.45;color:var(--ink-muted);text-wrap:balance;max-width:300px}
-.card-arch .rel{font-family:var(--f-body);font-weight:500;font-size:min(11.4px,2.8cqw);line-height:1.4;color:var(--ink-muted);white-space:nowrap}
+.card-arch .rel{font-family:var(--f-body);font-weight:600;font-size:min(15px,3.85cqw);line-height:1.3;color:var(--ink);white-space:nowrap}
 .card-arch .who{font-family:var(--f-display);font-style:italic;font-size:min(20px,5.3cqw);color:var(--maroon)}
 .card-arch .nm{font-family:var(--f-script);font-size:min(46px,12cqw);line-height:1.05;color:var(--maroon)}
 .card-arch .with{font-family:var(--f-caps);font-size:10px;letter-spacing:.3em;color:var(--gold-text)}
@@ -464,10 +467,10 @@ main{position:relative;z-index:3}
         <p class="who r" style="--d:.4s">Mrs. Mamta Jain &amp; Mr. Sushil Jain</p>
         <p class="ln r" style="--d:.65s">request the pleasure of your presence at the wedding celebration of their daughter</p>
         <p class="nm r" style="--d:.95s">Aanchal</p>
-        <p class="rel r" style="--d:1.15s">(Granddaughter of Late Sh. Nemchand Jain &amp; Smt. Uma Devi Jain, Hisar)</p>
+        <p class="rel r" style="--d:1.15s">(Grand Daughter of Late Sh. Nem Chand Jain<br>&amp; Smt. Uma Devi Jain, Hisar)</p>
         <p class="with r" style="--d:1.4s">WITH</p>
         <p class="nm r" style="--d:1.55s">Karthik</p>
-        <p class="rel r" style="--d:1.8s">(s/o Late Sh. M. Vijay Kumar &amp; Mrs. Latha Vijay Kumar)</p>
+        <p class="rel r" style="--d:1.8s">(s/o Late Sh. M. Vijay Kumar<br>&amp; Mrs. Latha Vijay Kumar)</p>
         <div class="orn r" style="--d:2.05s"><span></span><i></i><span></span></div>
       </div>
     </div>
@@ -477,7 +480,7 @@ main{position:relative;z-index:3}
   <section class="scene" id="haldi" data-scene="haldi" data-scrim="1">
     <div class="slot">
       <div class="copy" id="haldiCopy">
-        <h2 class="title r" style="--d:.1s;font-size:min(48px,12.3cqw)">Haldi &amp; Mehendi</h2>
+        <h2 class="title r" style="--d:.1s;font-size:min(44px,11.2cqw);white-space:nowrap">Haldi &amp; Mehendi</h2>
         <div class="orn r" style="--d:.25s"><span></span><i></i><span></span></div>
         <div class="ev r" style="--d:.4s"><p class="day">THURSDAY · 19 NOVEMBER</p><p class="time">11 AM onwards</p><i class="dot"></i><p class="note">Followed by lunch &amp; high tea</p><p class="venue">The Breeze, Terrace, Opulence</p></div>
       </div>
