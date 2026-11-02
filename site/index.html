@@ -743,19 +743,38 @@ const music = (() => {
     if(!started || k === cur) return;
     const prev = cur; cur = k;
     if(prev){ setVol(prev, 0, 1.6); const el = T[prev]; setTimeout(() => { if(cur !== prev) el.pause(); }, 1800); }
-    const el = T[k]; el.preload = "auto"; if(!ctx){ try{ el.volume = 0; }catch(_){} }
+    const el = T[k]; el.preload = "auto"; el.muted = false; if(!ctx){ try{ el.volume = 0; }catch(_){} }
     const pr = el.play(); if(pr && pr.catch) pr.catch(()=>{});
     setVol(k, target(), prev ? 2 : 2.5);
   }
+  // iPhone: a track may only start from a tap, so every track is unlocked silently on the first tap
+  function prime(){
+    for(const [k, el] of Object.entries(T)){ if(k === cur) continue;
+      el.preload = "auto"; el.muted = true;
+      const pr = el.play();
+      const done = () => { if(cur !== k){ el.pause(); try{ el.currentTime = 0; }catch(_){} } el.muted = false; };
+      if(pr && pr.then) pr.then(done, () => { el.muted = false; }); else done();
+    }
+  }
+  // iPhone: Safari can leave the sound stopped after a call, the lock screen or app switching; any tap revives it
+  function revive(){
+    if(!started || document.hidden) return;
+    if(ctx && ctx.state !== "running") ctx.resume().catch?.(()=>{});
+    if(cur && T[cur].paused){ const pr = T[cur].play(); if(pr && pr.catch) pr.catch(()=>{}); }
+  }
+  ["touchend","click"].forEach(ev => document.addEventListener(ev, revive, { passive:true }));
   return {
-    start(){ init(); if(ctx && ctx.state === "suspended") ctx.resume(); started = true; $("#sound").hidden = false; to("dam"); },
+    start(){
+      try{ if(navigator.audioSession) navigator.audioSession.type = "playback"; }catch(_){}   // play even with the iPhone's silent switch on
+      init(); if(ctx && ctx.state !== "running") ctx.resume(); started = true; $("#sound").hidden = false; to("dam"); prime();
+    },
     section(name){ if(SECTION[name]) to(SECTION[name]); },
     duck(d){ ducked = d; if(cur) setVol(cur, target(), d ? .9 : 2.2); },
     attachDhol(v){ if(!ctx || dholGain) return; try{ dholGain = ctx.createGain(); dholGain.gain.value = 1; ctx.createMediaElementSource(v).connect(dholGain).connect(master); }catch(_){} },
     dholFade(v, sec){ if(dholGain) ramp(dholGain, v, sec); },
     toggle(){ on = !on; if(cur) setVol(cur, target(), .6); if(master) ramp(master, on ? 1 : 0, .6); return on; },
     pauseAll(){ if(ctx) ctx.suspend(); else Object.values(T).forEach(el => el.pause()); },
-    resumeAll(){ if(ctx) ctx.resume(); else if(cur) T[cur].play().catch(()=>{}); }
+    resumeAll(){ if(ctx) ctx.resume(); if(cur && T[cur].paused) T[cur].play().catch(()=>{}); }
   };
 })();
 $("#sound").addEventListener("click", e => { const on = music.toggle(); e.currentTarget.setAttribute("aria-pressed", on); e.currentTarget.setAttribute("aria-label", on ? "Mute music" : "Play music"); });
